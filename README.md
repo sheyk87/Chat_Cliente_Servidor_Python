@@ -49,6 +49,38 @@ El proyecto sigue un modelo estricto **Cliente-Servidor**.
 ### Diagrama de Arquitectura de Red
 
 ```mermaid
+graph TD
+    subgraph Clientes
+        C1[Cliente 1 - UI]
+        C2[Cliente 2 - UI]
+        C3[Cliente N - UI]
+    end
+
+    subgraph Servidor Central
+        S[Servidor de Sockets TCP]
+        T1((Hilo C1))
+        T2((Hilo C2))
+        TN((Hilo CN))
+        S --> T1
+        S --> T2
+        S --> TN
+    end
+
+    subgraph Almacenamiento
+        DB[(chat_app.db SQLite)]
+        FS[Sistema de Archivos Local]
+    end
+
+    C1 <==> |JSON sobre TCP| T1
+    C2 <==> |JSON sobre TCP| T2
+    C3 <==> |JSON sobre TCP| TN
+
+    T1 --> DB
+    T2 --> DB
+    TN --> FS
+```
+
+```mermaid
 sequenceDiagram
     participant C as Cliente Remitente
     participant S as Servidor Central
@@ -78,3 +110,4 @@ sequenceDiagram
         S-->>C: [CONFIRMACION_ARCHIVO] Valida la subida exitosa
         S-->>D: [NUEVO_MENSAJE] Notifica que hay un adjunto disponible
     end
+```
