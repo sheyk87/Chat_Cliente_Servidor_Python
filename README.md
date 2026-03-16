@@ -78,30 +78,3 @@ graph TD
     T1 --> DB
     T2 --> DB
     TN --> FS
-
-
-### Diagrama de Flujo: Transferencia de Archivos Segura (Streaming)
-
-El siguiente diagrama detalla el proceso de envío de archivos por fragmentos (chunks) validado mediante criptografía para garantizar la integridad de los datos sin saturar la red.
-
-```mermaid
-flowchart TD
-    A[Cliente: Selecciona archivo y calcula Hash SHA-256] --> B(Cliente: Envía INICIO_ARCHIVO con Hash)
-    B --> C[Servidor: Reserva espacio y emite PERMISO_ENVIO_CHUNKS]
-    
-    C --> D[Cliente: Inicia lectura de archivo en Hilo Secundario]
-    
-    subgraph Ciclo de Streaming
-        D --> E(Cliente: Envía CHUNK_ARCHIVO en Base64 - 512KB)
-        E --> F[Servidor: Escribe fragmento en el disco local]
-        F --> G{¿Quedan más datos?}
-        G -- Sí --> E
-    end
-    
-    G -- No --> H(Cliente: Envía FIN_ARCHIVO)
-    H --> I[Servidor: Calcula Hash SHA-256 del archivo completo en disco]
-    
-    I --> J{¿Los Hashes coinciden?}
-    J -- No --> K[Servidor: Borra archivo corrupto y envía ERROR]
-    J -- Sí --> L[Servidor: Registra archivo en Base de Datos SQLite]
-    L --> M((Servidor: Envía CONFIRMACION_ARCHIVO y alerta al Destinatario))
