@@ -78,3 +78,35 @@ graph TD
     T1 --> DB
     T2 --> DB
     TN --> FS
+
+
+```mermaid
+sequenceDiagram
+    participant C as Cliente Remitente
+    participant S as Servidor Central
+    participant D as Destinatario(s)
+
+    Note over C: El usuario selecciona un archivo
+    C->>C: Calcula la huella digital (Hash SHA-256)
+    
+    C->>S: [INICIO_ARCHIVO] Envía metadatos y Hash SHA-256
+    S->>S: Reserva memoria temporal y genera Transfer_ID
+    S-->>C: [PERMISO_ENVIO_CHUNKS] Autoriza la subida
+    
+    Note over C,S: Hilo secundario para no bloquear la Interfaz
+    loop Envío de Fragmentos (Chunks)
+        C->>S: [CHUNK_ARCHIVO] Envía pedazo de 512 KB en Base64
+        S->>S: Anexa el pedazo al archivo físico en disco
+    end
+    
+    C->>S: [FIN_ARCHIVO] Notifica fin de transmisión
+    S->>S: Calcula Hash SHA-256 del archivo recibido completo
+    
+    alt Las huellas digitales NO coinciden
+        S->>S: Elimina el archivo físico por seguridad
+        S-->>C: [ERROR] Notifica corrupción en la transferencia
+    else Las huellas digitales SÍ coinciden
+        S->>S: Registra el archivo en Base de Datos (SQLite)
+        S-->>C: [CONFIRMACION_ARCHIVO] Valida la subida exitosa
+        S-->>D: [NUEVO_MENSAJE] Notifica que hay un adjunto disponible
+    end
