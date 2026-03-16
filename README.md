@@ -79,7 +79,9 @@ graph TD
     T2 --> DB
     TN --> FS
 ```
+### Diagrama de Flujo: Transferencia de Archivos Segura (Streaming)
 
+La transmisión de archivos evita los cuellos de botella en la red y la saturación de memoria RAM mediante una negociación previa de permisos y el envío por fragmentos (chunks), asegurando la integridad criptográfica al finalizar.
 ```mermaid
 sequenceDiagram
     participant C as Cliente Remitente
