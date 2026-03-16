@@ -78,33 +78,3 @@ graph TD
     T1 --> DB
 
 
-
-
-sequenceDiagram
-    participant C as Cliente Remitente
-    participant S as Servidor Central
-    participant D as Destinatario(s)
-
-    C->>C: Calcula Hash SHA-256 del archivo
-    C->>S: [INICIO_ARCHIVO] (Nombre, Destino, Hash SHA-256)
-    S->>S: Reserva memoria y genera Transfer_ID
-    S-->>C: [PERMISO_ENVIO_CHUNKS] (Transfer_ID)
-    
-    loop Lectura en Hilo Secundario
-        C->>S: [CHUNK_ARCHIVO] (Base64, Transfer_ID)
-        S->>S: Escribe binario progresivamente en disco
-    end
-    
-    C->>S: [FIN_ARCHIVO] (Transfer_ID)
-    S->>S: Calcula Hash SHA-256 del archivo recibido en disco
-    
-    alt Hashes No Coinciden
-        S->>S: Borra el archivo corrupto
-        S-->>C: [ERROR] (Corrupción detectada)
-    else Hashes Coinciden
-        S->>S: Registra en Base de Datos SQLite
-        S-->>C: [CONFIRMACION_ARCHIVO]
-        S-->>D: [NUEVO_MENSAJE] (Notificación de archivo adjunto)
-    end
-    T2 --> DB
-    TN --> FS
