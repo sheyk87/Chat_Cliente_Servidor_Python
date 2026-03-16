@@ -78,36 +78,3 @@ graph TD
     T1 --> DB
     T2 --> DB
     TN --> FS
-
-
-### Diagrama de Flujo: Transferencia de Archivos Segura (Streaming)
-
-La transmisión de archivos evita los cuellos de botella en la memoria y en la red mediante una negociación previa, envío por fragmentos (chunks) y verificación criptográfica final.
-
-```mermaid
-sequenceDiagram
-    participant C as Cliente Remitente
-    participant S as Servidor Central
-    participant D as Destinatario(s)
-
-    C->>C: Calcula Hash SHA-256 del archivo original
-    C->>S: [INICIO_ARCHIVO] (Nombre, Destino, Hash SHA-256)
-    S->>S: Reserva memoria y genera Transfer_ID único
-    S-->>C: [PERMISO_ENVIO_CHUNKS] (Transfer_ID)
-    
-    loop Lectura en Hilo Secundario (Chunks de 512KB)
-        C->>S: [CHUNK_ARCHIVO] (Base64, Transfer_ID)
-        S->>S: Escribe datos binarios progresivamente en disco local
-    end
-    
-    C->>S: [FIN_ARCHIVO] (Transfer_ID)
-    S->>S: Calcula Hash SHA-256 del archivo recibido en disco
-    
-    alt Hashes No Coinciden
-        S->>S: Elimina el archivo corrupto del disco
-        S-->>C: [ERROR] (Corrupción detectada en la transferencia)
-    else Hashes Coinciden
-        S->>S: Registra metadatos en Base de Datos SQLite
-        S-->>C: [CONFIRMACION_ARCHIVO]
-        S-->>D: [NUEVO_MENSAJE] (Notificación de archivo adjunto en el chat)
-    end
