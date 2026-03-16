@@ -76,5 +76,5 @@ graph TD
     C3 <==> |JSON sobre TCP| TN
 
     T1 --> DB
-
-
+    T2 --> DB
+    TN --> FS
