@@ -197,7 +197,7 @@ Gracias a su arquitectura "Zero-Dependencies", desplegar el sistema es un proces
 Descarga el código fuente a tu máquina local utilizando Git, o descargando el archivo ZIP directamente desde GitHub:
 ```bash
 git clone https://github.com/sheyk87/Chat_Cliente_Servidor_Python.git
-cd chat-app-empresarial
+cd Chat_Cliente_Servidor_Python
 ```
 
 ### Paso 2: Iniciar el Servidor Central
