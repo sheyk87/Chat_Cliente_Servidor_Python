@@ -169,25 +169,25 @@ erDiagram
     }
 ```
 
-###👤 Entidades de Acceso y Control
-* **Usuarios: Almacena las identidades, credenciales cifradas y el nivel de acceso al sistema.
-* **Columnas: id (PK), nombre, usuario (Único), password (Hash SHA-256 + Salt), perfil_id (1 = Administrador, 2 = Estándar).
-* **Auditoria_Login: Registro inmutable (log) de eventos críticos de seguridad, administración y transferencias.
-* **Columnas: id (PK), fecha, ip, usuario, accion (Ej: LOGIN, CREÓ GRUPO, EXPULSÓ DE #Ventas, DESCARGÓ ARCHIVO).
+👤 Entidades de Acceso y Control
+* Usuarios: Almacena las identidades, credenciales cifradas y el nivel de acceso al sistema.
+* Columnas: id (PK), nombre, usuario (Único), password (Hash SHA-256 + Salt), perfil_id (1 = Administrador, 2 = Estándar).
+* Auditoria_Login: Registro inmutable (log) de eventos críticos de seguridad, administración y transferencias.
+* Columnas: id (PK), fecha, ip, usuario, accion (Ej: LOGIN, CREÓ GRUPO, EXPULSÓ DE #Ventas, DESCARGÓ ARCHIVO).
 
 ### 🏢 Entidades de Agrupación (Salas)
-* **Grupos: Definición central de las salas de chat corporativas y sus configuraciones de privacidad.
-* **Columnas: id (PK), nombre (Único), solo_gestores (Booleano: 1=Bloqueado/Solo Lectura, 0=Público/Escritura libre).
-* **Grupo_Miembros: Tabla pivote (relación muchos a muchos) que vincula qué usuarios pertenecen a qué grupos y define su jerarquía local.
-* **Columnas: grupo_id (FK), usuario_id (FK), es_gestor (Booleano: 1=Administrador del grupo, 0=Miembro regular).
+* Grupos: Definición central de las salas de chat corporativas y sus configuraciones de privacidad.
+* Columnas: id (PK), nombre (Único), solo_gestores (Booleano: 1=Bloqueado/Solo Lectura, 0=Público/Escritura libre).
+* Grupo_Miembros: Tabla pivote (relación muchos a muchos) que vincula qué usuarios pertenecen a qué grupos y define su jerarquía local.
+* Columnas: grupo_id (FK), usuario_id (FK), es_gestor (Booleano: 1=Administrador del grupo, 0=Miembro regular).
 
 ### ✉️ Entidades de Comunicación y Datos
-* **Mensajes_Directos: Registro cronológico de las conversaciones privadas (1 a 1) entre los empleados.
-* **Columnas: id (PK), fecha, remitente, destinatario, mensaje, es_archivo, archivo_path, reply_to (Referencia a mensajes anteriores).
-* **Mensajes_Grupos: Registro del historial de los canales de chat grupales, permitiendo que nuevos miembros lean el contexto previo.
-* **Columnas: id (PK), fecha, grupo, remitente, mensaje, reply_to.
-* **Archivos: Metadatos de seguridad de los ficheros adjuntos. Separa el nombre original que ve el usuario, del nombre ofuscado y único que se guarda en el disco del servidor para evitar colisiones.
-* **Columnas: id (PK), remitente, destino, nombre_original, nombre_servidor (UUID + Nombre), fecha.
+* Mensajes_Directos: Registro cronológico de las conversaciones privadas (1 a 1) entre los empleados.
+* Columnas: id (PK), fecha, remitente, destinatario, mensaje, es_archivo, archivo_path, reply_to (Referencia a mensajes anteriores).
+* Mensajes_Grupos: Registro del historial de los canales de chat grupales, permitiendo que nuevos miembros lean el contexto previo.
+* Columnas: id (PK), fecha, grupo, remitente, mensaje, reply_to.
+* Archivos: Metadatos de seguridad de los ficheros adjuntos. Separa el nombre original que ve el usuario, del nombre ofuscado y único que se guarda en el disco del servidor para evitar colisiones.
+* Columnas: id (PK), remitente, destino, nombre_original, nombre_servidor (UUID + Nombre), fecha.
 
 ### ⚙️ Instalación y Uso
 
@@ -203,18 +203,18 @@ cd chat-app-empresarial
 ### Paso 2: Iniciar el Servidor Central
 El servidor es el núcleo de la red y debe ejecutarse antes que cualquier cliente.
 
-* **Abre una terminal en la carpeta del proyecto y ejecuta:
+* Abre una terminal en la carpeta del proyecto y ejecuta:
 
 ```bash
 python server.py
 ```
 
 ¿Qué sucede en el primer inicio?
-* **El servidor realizará un despliegue automático (Auto-Setup):
-* **Creará la base de datos chat_app.db con todas las tablas relacionales.
-* **Generará la carpeta local archivos_servidor para alojar los adjuntos.
-* **Creará la cuenta maestra de administración con su contraseña cifrada.
-* **Comenzará a escuchar conexiones TCP entrantes en 127.0.0.1:65432.
+* El servidor realizará un despliegue automático (Auto-Setup):
+* Creará la base de datos chat_app.db con todas las tablas relacionales.
+* Generará la carpeta local archivos_servidor para alojar los adjuntos.
+* Creará la cuenta maestra de administración con su contraseña cifrada.
+* Comenzará a escuchar conexiones TCP entrantes en 127.0.0.1:65432.
 
 ### Paso 3: Iniciar los Clientes
 Una vez que el servidor esté en ejecución y escuchando, abre una (o varias) terminales nuevas y ejecuta la aplicación cliente:
@@ -227,8 +227,8 @@ python client.py
 ### Paso 4: Primer Acceso y Credenciales
 Utiliza la cuenta maestra generada automáticamente por el sistema para tu primer inicio de sesión:
 
-Usuario: ```admin```
+Usuario: `admin`
 
-Contraseña: ```admin```
+Contraseña: `admin`
 
 ⚠️ Advertencia de Seguridad: Al tratarse de un entorno empresarial, es obligatorio dirigirse al menú superior "Mi Cuenta -> Cambiar Contraseña" e ingresar una nueva clave segura inmediatamente después del primer inicio de sesión. A partir de ese momento, podrás usar el menú de "Administración" para dar de alta al resto de los empleados.
